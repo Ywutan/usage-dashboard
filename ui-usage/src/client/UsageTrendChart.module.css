@@ -1,0 +1,82 @@
+.period {
+  margin: 0 0 8px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.heading {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+
+.chartScroll {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: max-content;
+}
+
+.barCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 44px;
+}
+
+.barTrack {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  width: 100%;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  background: var(--dsw-alias-interactive-accent, var(--dsw-static-accent-blue-500));
+  min-height: 2px;
+}
+
+.barLabel {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 9px;
+  line-height: 12px;
+  white-space: nowrap;
+}
+
+.table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--dsw-alias-border-divider);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table th {
+  color: var(--dsw-alias-label-tertiary);
+  font-weight: 500;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+}
+
+.table td {
+  color: var(--dsw-alias-label-primary);
+}

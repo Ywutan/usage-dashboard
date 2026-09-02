@@ -1,0 +1,49 @@
+.heading {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--dsw-alias-border-divider);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table th {
+  color: var(--dsw-alias-label-tertiary);
+  font-weight: 500;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+}
+
+.table td {
+  color: var(--dsw-alias-label-primary);
+}
+
+.model {
+  display: block;
+  font-weight: 500;
+}
+
+.provider {
+  display: block;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.unpriced {
+  color: var(--dsw-alias-label-tertiary);
+}

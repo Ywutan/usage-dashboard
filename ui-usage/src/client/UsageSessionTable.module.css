@@ -1,0 +1,132 @@
+.heading {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--dsw-alias-border-divider);
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--dsw-alias-label-tertiary);
+  font-weight: 500;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+}
+
+.table td {
+  color: var(--dsw-alias-label-primary);
+}
+
+.sessionId {
+  display: block;
+  font-weight: 500;
+  font-family: var(--dsw-font-mono, ui-monospace, monospace);
+  font-size: 11px;
+}
+
+.created {
+  display: block;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.explore {
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.explore:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.explorerRow td {
+  padding: 0 10px 10px;
+}
+
+.explorer {
+  max-height: 320px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid var(--dsw-alias-border-divider);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.status {
+  margin: 0;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 12px;
+}
+
+.truncated {
+  margin: 0 0 8px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.eventTime {
+  color: var(--dsw-alias-label-tertiary);
+  white-space: nowrap;
+}
+
+.eventSeq {
+  color: var(--dsw-alias-label-tertiary);
+  white-space: nowrap;
+  font-family: var(--dsw-font-mono, ui-monospace, monospace);
+}
+
+.eventType {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.eventData {
+  flex: 1;
+  min-width: 0;
+  color: var(--dsw-alias-label-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
