@@ -1,0 +1,20 @@
+{
+  // Host aggregate. The browser half type-checks in tsconfig.client.json: both
+  // sides merge the cordis Context under the same keys, so one program cannot
+  // see both. Its presence at the repository root is also what the typert
+  // generator reads as this workspace's root.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rewriteRelativeImportExtensions": false
+  },
+  "include": [
+    "packages/usage-report/tests/**/*.ts",
+    "packages/usage-dashboard/tests/**/*.ts",
+    "tools/**/*.mjs"
+  ],
+  "references": [
+    { "path": "./packages/usage-report" },
+    { "path": "./packages/usage-dashboard" }
+  ]
+}

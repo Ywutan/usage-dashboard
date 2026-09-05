@@ -1,0 +1,11 @@
+# One folder per plugin package. The `packages/` parent is required, not
+# cosmetic: the typert generator only registers packages under it.
+packages:
+  - packages/*
+
+# The harness packages are peerDependencies satisfied by a linked checkout
+# (tools/link-harness.mjs) or by the profile at run time, never by the
+# registry: pnpm must neither resolve nor install them, and an unmet peer here
+# is the expected state.
+autoInstallPeers: false
+strictPeerDependencies: false
