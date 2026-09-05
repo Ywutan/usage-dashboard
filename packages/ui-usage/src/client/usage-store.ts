@@ -40,6 +40,8 @@ type UsagePanelActions = {
   finishLoad: (state: UsagePanelState, report: UsageReportValue) => void
   /** Record a fetch failure. */
   failLoad: (state: UsagePanelState, error: string) => void
+  /** Abandon an in-flight fetch whose panel went away, so a later open retries. */
+  cancelLoad: (state: UsagePanelState) => void
 }
 
 /**
@@ -62,9 +64,6 @@ export function createUsageStore(): EngineStoreHandle<UsagePanelState, UsagePane
       },
       closePanel: (state) => {
         state.open = false
-        // An in-flight fetch is aborted by the panel unmount; resetting the
-        // flag here keeps a reopen from inheriting a stuck "loading" state.
-        state.loading = false
       },
       setRange: (state, range) => {
         state.range = range
@@ -86,6 +85,12 @@ export function createUsageStore(): EngineStoreHandle<UsagePanelState, UsagePane
       failLoad: (state, error) => {
         state.loading = false
         state.error = error
+      },
+      cancelLoad: (state) => {
+        // An aborted load settles nothing, so the flag it raised would outlive
+        // it and the load effect — which skips while `loading` is true — would
+        // never try again.
+        state.loading = false
       },
     },
   })

@@ -87,7 +87,15 @@ export function UsagePanel({
     loadController.current = controller
     void loadReport(target, window, controller.signal)
   }, [loadReport])
-  useEffect(() => () => { loadController.current?.abort() }, [])
+  // Reached through a ref so the cleanup never re-runs on the actions'
+  // identity: a cleanup keyed to them would abort a healthy load whenever the
+  // slot re-bakes its write set.
+  const actionsRef = useRef(actions)
+  actionsRef.current = actions
+  useEffect(() => () => {
+    loadController.current?.abort()
+    actionsRef.current.cancelLoad()
+  }, [])
 
   // Load the report when the panel opens or the window/selection changes and
   // the cached report does not match; loadReport commits its own lifecycle

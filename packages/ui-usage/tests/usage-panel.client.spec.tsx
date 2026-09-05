@@ -155,6 +155,23 @@ function renderTrigger(
 }
 
 describe('UsageTrigger', () => {
+  it('retries the load after a panel unmount aborted the previous one', () => {
+    const store = createUsageStore().create()
+    const first = renderTrigger(store)
+    fireEvent.click(screen.getByRole('button', { name: en['trigger.aria'] }))
+    expect(first.loadReport).toHaveBeenCalledTimes(1)
+    // The loader never settles: the unmount below aborts it, which is what a
+    // remount (React's development double-invoke, a slot re-mount) does to the
+    // very first load a panel starts.
+    store.actions.beginLoad(WID)
+    first.unmount()
+
+    const second = renderTrigger(store)
+
+    expect(store.getSnapshot().loading).toBe(false)
+    expect(second.loadReport).toHaveBeenCalledTimes(1)
+  })
+
   it('opens the panel and loads the current workspace on click', () => {
     const store = createUsageStore().create()
     const { loadReport } = renderTrigger(store)
