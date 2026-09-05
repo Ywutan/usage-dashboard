@@ -50,6 +50,6 @@ export default defineConfig({
     // Component specs select jsdom with their own `@vitest-environment`
     // pragma, as the harness's own client suites do; everything else runs on
     // node.
-    include: ['packages/*/tests/**/*.spec.ts', 'packages/*/tests/**/*.spec.tsx'],
+    include: ['tests/**/*.spec.ts', 'tests/**/*.spec.tsx'],
   },
 })

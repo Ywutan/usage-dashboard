@@ -20,7 +20,7 @@
  * @module tsdown.preset
  */
 import { readFile } from 'node:fs/promises'
-import { existsSync, globSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { createRequire, isBuiltin } from 'node:module'
 import { basename, dirname, join, relative, resolve as resolvePath, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -38,7 +38,7 @@ const INLINE_CSS_VIRTUAL_PREFIX = '\0dsh-inline-css:'
 const CSS_VIRTUAL_SUFFIX = '.mjs'
 const INLINE_CSS_QUERY = '?inline'
 
-/** This repository's root: the directory holding one folder per plugin package. */
+/** This package's root, and the base every emitted source path is relative to. */
 const PLUGIN_REPOSITORY_ROOT = fileURLToPath(new URL('.', import.meta.url))
 
 /**
@@ -197,25 +197,23 @@ const productionExternalCache = new Map<string, readonly RegExp[]>()
 const clientExternalCache = new Map<string, ReadonlySet<string>>()
 
 /**
- * Read one plugin package's manifest. Located by package name rather than by
- * cwd, because tsdown evaluates a package config with the invoking directory as
- * `process.cwd()`, which differs between a per-package and a repository-wide run.
+ * Read this package's manifest. Located beside the preset rather than through
+ * `process.cwd()`, which tsdown sets to the invoking directory.
  * @param id - package name, as spelled at the preset call site.
  * @returns the parsed manifest.
- * @throws {Error} when no package folder in this repository declares that name.
+ * @throws {Error} when the manifest declares a different name.
  */
 function pluginManifest(id: string): PluginManifest {
   const cached = manifestCache.get(id)
   if (cached !== undefined) return cached
-  for (const manifestPath of globSync('packages/*/package.json', { cwd: PLUGIN_REPOSITORY_ROOT })) {
-    const manifest = JSON.parse(
-      readFileSync(resolvePath(PLUGIN_REPOSITORY_ROOT, manifestPath), 'utf8'),
-    ) as PluginManifest
-    if (manifest.name !== id) continue
-    manifestCache.set(id, manifest)
-    return manifest
+  const manifest = JSON.parse(
+    readFileSync(resolvePath(PLUGIN_REPOSITORY_ROOT, 'package.json'), 'utf8'),
+  ) as PluginManifest
+  if (manifest.name !== id) {
+    throw new Error(`tsdown: package.json declares ${String(manifest.name)}, not ${id}`)
   }
-  throw new Error(`tsdown: no packages/*/package.json under ${PLUGIN_REPOSITORY_ROOT} declares the name ${id}`)
+  manifestCache.set(id, manifest)
+  return manifest
 }
 
 /**

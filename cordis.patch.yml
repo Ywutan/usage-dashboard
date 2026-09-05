@@ -1,0 +1,9 @@
+# The dsh-usage-dashboard bundle patch. One row: this package carries both
+# halves — the Host `usage` Remote namespace as its node entry, and the sidebar
+# action plus full-viewport report as its `./client` browser bundle. A profile
+# without this bundle has neither.
+#
+# Install with:  dsh plugin --profile web add github:Ywutan/usage-dashboard
+- insert:
+    - id: usage-dashboard
+      name: '@deepseek-ai/dsh-usage-dashboard'

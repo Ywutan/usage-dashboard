@@ -1,21 +1,16 @@
 {
-  // Client aggregate: the browser packages plus their tests and this
-  // repository's own build preset.
+  // Browser face: the sidebar action and the dashboard panel.
   "extends": "./tsconfig.base.client.json",
   "compilerOptions": {
-    "noEmit": true,
-    "rewriteRelativeImportExtensions": false,
-    // Tests execute under vitest on node; browser purity of package src is
-    // each package's own tsconfig plus the bundle purity gate in the preset.
-    "types": ["node"]
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
   },
   "include": [
-    "packages/ui-usage/src/css-modules.d.ts",
-    "packages/ui-usage/tests/**/*.ts",
-    "packages/ui-usage/tests/**/*.tsx",
-    "tsdown.preset.ts"
-  ],
-  "references": [
-    { "path": "./packages/ui-usage" }
+    "src/client",
+    "src/css-modules.d.ts",
+    // Pure data types, shared by both faces: they carry no Context merge, so
+    // each face compiles them into its own program.
+    "src/types.ts"
   ]
 }

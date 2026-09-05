@@ -26,10 +26,10 @@ const REPOSITORY_ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)))
 
 /** Package generated here, and where it must sit inside a harness checkout. */
 const SUBJECT = {
-  name: '@deepseek-ai/dsh-usage-report',
-  source: join(REPOSITORY_ROOT, 'packages', 'usage-report'),
-  harnessPath: join('packages', 'usage', 'usage-report'),
-  output: join(REPOSITORY_ROOT, 'packages', 'usage-report', 'typert'),
+  name: '@deepseek-ai/dsh-usage-dashboard',
+  source: REPOSITORY_ROOT,
+  harnessPath: join('packages', 'usage', 'usage-dashboard'),
+  output: join(REPOSITORY_ROOT, 'typert'),
 }
 
 /**
@@ -73,7 +73,12 @@ if (existsSync(stagedRoot)) {
 const originalSolution = readFileSync(hostSolution, 'utf8')
 
 try {
-  cpSync(join(SUBJECT.source, 'src'), join(stagedRoot, 'src'), { recursive: true })
+  // Only the Host face is analyzed; the browser sources would pull the client
+  // Context merge into the same program.
+  mkdirSync(join(stagedRoot, 'src'), { recursive: true })
+  for (const file of ['index.ts', 'types.ts', 'usage.ts', 'invariant.ts']) {
+    cpSync(join(SUBJECT.source, 'src', file), join(stagedRoot, 'src', file))
+  }
   cpSync(join(SUBJECT.source, 'package.json'), join(stagedRoot, 'package.json'))
   writeFileSync(join(stagedRoot, 'tsconfig.json'), `${JSON.stringify(STAGED_TSCONFIG, null, 2)}\n`)
 

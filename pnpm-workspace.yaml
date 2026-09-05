@@ -1,11 +1,11 @@
-# One folder per plugin package. The `packages/` parent is required, not
-# cosmetic: the typert generator only registers packages under it.
+# Single package, no workspace members: this file exists for the settings,
+# which pnpm 10+ reads here rather than from .npmrc.
 packages:
-  - packages/*
+  - .
 
-# The harness packages are peerDependencies satisfied by a linked checkout
-# (tools/link-harness.mjs) or by the profile at run time, never by the
-# registry: pnpm must neither resolve nor install them, and an unmet peer here
-# is the expected state.
+# The harness packages are peerDependencies the profile supplies at run time
+# from its own module fallback; `tools/link-harness.mjs` links a checkout for
+# building. pnpm must never fetch them from the registry — the same setting the
+# dsh profile directory uses.
 autoInstallPeers: false
 strictPeerDependencies: false

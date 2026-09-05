@@ -34,9 +34,10 @@ if (!existsSync(join(harnessRoot, 'pnpm-workspace.yaml')) || !existsSync(join(ha
   process.exit(1)
 }
 
-/** Package names this repository owns: pnpm links them from the workspace itself. */
-const localPackages = new Set(globSync('packages/*/package.json', { cwd: REPOSITORY_ROOT })
-  .map(manifestPath => JSON.parse(readFileSync(join(REPOSITORY_ROOT, manifestPath), 'utf8')).name))
+/** This package's own name: it must never be shadowed by a harness link. */
+const localPackages = new Set([
+  JSON.parse(readFileSync(join(REPOSITORY_ROOT, 'package.json'), 'utf8')).name,
+])
 
 const scopeDirectory = join(REPOSITORY_ROOT, 'node_modules', '@deepseek-ai')
 mkdirSync(scopeDirectory, { recursive: true })
