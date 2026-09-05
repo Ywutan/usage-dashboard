@@ -34,7 +34,11 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
   }
 }
 
-/** Required services: the Remote service (mount + calls), the Slot registry, and locale. */
+/**
+ * Required services: the Remote service (to mount onto), the Slot registry,
+ * and locale. `remote.usage` is deliberately absent: this plugin provides that
+ * namespace, and injecting a service one provides never settles.
+ */
 export const inject = ['remote', 'slots', 'locale']
 
 /** The browser's IANA zone, falling back to UTC when unavailable. */
@@ -96,21 +100,41 @@ function usageActions(
 }
 
 /**
- * Client plugin body: register the dictionaries and the dashboard trigger.
- * @param ctx - client root context.
+ * The dashboard itself, as a child fiber. Cordis guards every Remote property
+ * behind its own injection, so reading `ctx.remote.usage` requires naming it —
+ * which the owning plugin cannot do for a namespace it mounts itself. The
+ * child declares the injection and the parent's mount settles it.
  */
-export async function apply(ctx: ClientContext): Promise<void> {
-  // Mount the generated `usage` Remote namespace so the dashboard can call it;
-  // the namespace exists only while this plugin is loaded (bundle-installed).
-  await ctx.remote.$mount(usageRemote)
+const usageDashboard = {
+  name: 'ui-usage-dashboard',
+  inject: ['remote.usage', 'slots', 'locale'],
+  /**
+   * Register the sidebar trigger and its dashboard panel.
+   * @param ctx - child context carrying the mounted `usage` namespace.
+   */
+  apply(ctx: ClientContext): void {
+    const usageStore = createUsageStore()
+    ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({
+      name: 'sidebar.footer.action',
+      id: 'usage-trigger',
+      order: 100,
+      locale: NS,
+      store: usageStore,
+      inject: actions => usageActions(ctx, actions),
+    }, UsageTrigger))
+  },
+}
+
+/**
+ * Client plugin body: mount the `usage` Remote namespace, register the
+ * dictionaries, and load the dashboard over them.
+ * @param ctx - client root context.
+ * @returns disposer unmounting the namespace.
+ */
+export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
+  // The namespace exists only while this plugin is loaded (bundle-installed).
+  const unmount = await ctx.remote.$mount(usageRemote)
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-usage: dictionaries')
-  const usageStore = createUsageStore()
-  ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({
-    name: 'sidebar.footer.action',
-    id: 'usage-trigger',
-    order: 100,
-    locale: NS,
-    store: usageStore,
-    inject: (actions) => usageActions(ctx, actions),
-  }, UsageTrigger))
+  ctx.plugin(usageDashboard)
+  return unmount
 }
